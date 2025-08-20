@@ -16,7 +16,7 @@ const Signup = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    product_key: ""
+    farmLocation: ""
   });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ const Signup = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    
     if (formData.password !== formData.confirmPassword) {
       toast({
         title: t('common.error'),
@@ -45,30 +45,13 @@ const Signup = () => {
     setIsLoading(true);
 
     try {
-      const supabaseMod = await import("@/services/supabaseClient");
-      const supabase = supabaseMod.supabase;
-      const { data: productData, error: productError } = await supabase
-        .from('products')
-        .select('id')
-        .eq('id', formData.product_key)
-        .single();
-
-      if (productError || !productData) {
-        toast({
-          title: t('common.error'),
-          description: 'Invalid Product ID. Please enter a valid Product ID.',
-          variant: "destructive"
-        });
-        setIsLoading(false);
-        return;
-      }
-
       const { data, error } = await authService.signUp({
         email: formData.email,
         password: formData.password,
         fullName: formData.name,
+        farmLocation: formData.farmLocation
       });
-
+      
       if (error) {
         throw error;
       }
@@ -130,19 +113,6 @@ const Signup = () => {
           <CardContent className="px-4 md:px-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <Label htmlFor="product_id" className="text-sm md:text-base">{t('auth.productId')}</Label>
-                <Input
-                  id="product_id"
-                  name="product_key"
-                  type="text"
-                  placeholder="Enter your product ID"
-                  value={formData.product_key}
-                  onChange={handleChange}
-                  required
-                  className="mt-1"
-                />
-              </div>
-              <div>
                 <Label htmlFor="name" className="text-sm md:text-base">{t('auth.fullName')}</Label>
                 <Input
                   id="name"
@@ -168,7 +138,19 @@ const Signup = () => {
                   className="mt-1"
                 />
               </div>
-              
+              <div>
+                <Label htmlFor="farmLocation" className="text-sm md:text-base">{t('auth.farmLocation')}</Label>
+                <Input
+                  id="farmLocation"
+                  name="farmLocation"
+                  type="text"
+                  placeholder="City, State"
+                  value={formData.farmLocation}
+                  onChange={handleChange}
+                  required
+                  className="mt-1"
+                />
+              </div>
               <div>
                 <Label htmlFor="password" className="text-sm md:text-base">{t('auth.password')}</Label>
                 <Input

@@ -10,8 +10,10 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
+// Translation data
 const translations = {
   en: {
+    // Navigation
     'nav.home': 'Home',
     'nav.features': 'Features',
     'nav.howItWorks': 'How It Works',
@@ -19,6 +21,7 @@ const translations = {
     'nav.signup': 'Get Started',
     'nav.start': 'Start',
     
+    // Dashboard
     'dashboard.title': 'Dashboard',
     'dashboard.subtitle': 'Comprehensive soil analysis and fertilizer recommendations powered by real-time data and ML',
     'dashboard.overview': 'Farm Overview',
@@ -100,19 +103,20 @@ const translations = {
     'dashboard.for': 'For',
     'dashboard.farmerDashboard': 'Farmer Dashboard',
     
+    // Profile
     'profile.failedToLoad': 'Failed to load profile data',
     'profile.profileUpdated': 'Profile Updated',
     'profile.profileUpdateSuccess': 'Your profile has been successfully updated.',
     'profile.failedToUpdate': 'Failed to update profile',
-  'profile.loadingProfile': 'Loading profile...',
-  'profile.editProfile': 'Edit Profile',
-  'profile.updatePersonalInfo': 'Update your personal information and farm details',
-  'profile.fullName': 'Full Name',
-  'profile.enterFullName': 'Enter your full name',
-  'profile.email': 'Email',
-  'profile.enterEmail': 'Enter your email',
-  'profile.productId': 'Product ID',
-  'profile.cityStateCountry': 'City, State, Country',
+    'profile.loadingProfile': 'Loading profile...',
+    'profile.editProfile': 'Edit Profile',
+    'profile.updatePersonalInfo': 'Update your personal information and farm details',
+    'profile.fullName': 'Full Name',
+    'profile.enterFullName': 'Enter your full name',
+    'profile.email': 'Email',
+    'profile.enterEmail': 'Enter your email',
+    'profile.farmLocation': 'Farm Location',
+    'profile.cityStateCountry': 'City, State, Country',
     'profile.phoneNumber': 'Phone Number',
     'profile.farmSize': 'Farm Size',
     'profile.unit': 'Unit',
@@ -122,6 +126,7 @@ const translations = {
     'profile.saving': 'Saving...',
     'profile.saveChanges': 'Save Changes',
     
+    // Forms
     'form.fieldName': 'Field Name',
     'form.fieldSize': 'Field Size',
     'form.cropType': 'Crop Type',
@@ -146,6 +151,7 @@ const translations = {
     'form.noDataAvailable': 'No Data Available',
     'form.realTimeSensorDataNotAvailable': 'Real-time sensor data is not available',
     
+    // Common
     'common.loading': 'Loading...',
     'common.error': 'Error',
     'common.success': 'Success',
@@ -157,6 +163,7 @@ const translations = {
     'common.no': 'No',
     'common.back': 'Back',
     
+    // Language switcher
     'language.english': 'English',
     'language.hindi': 'हिंदी',
     'language.punjabi': 'ਪੰਜਾਬੀ',
@@ -177,7 +184,7 @@ const translations = {
     'auth.signupAccount': 'Create your AgriCure account',
     'auth.fullName': 'Full Name',
     'auth.confirmPassword': 'Confirm Password',
-    'auth.productId': 'Product Id',
+    'auth.farmLocation': 'Farm Location',
     'auth.accountCreated': 'Account Created Successfully',
     'auth.welcomeToAgriCure': 'Welcome to AgriCure! You can now sign in to your account.',
     'auth.signupFailed': 'Signup Failed',
@@ -188,6 +195,7 @@ const translations = {
     'auth.alreadyHaveAccount': 'Already have an account?',
     'auth.signInHere': 'Sign in here',
     
+    // Hero Section
     'hero.title': 'Smart Farming for',
     'hero.titleHighlight': 'Better Yields',
     'hero.subtitle': 'Get personalized fertilizer recommendations based on your soil analysis. Maximize your crop yields with data-driven farming decisions.',
@@ -197,6 +205,7 @@ const translations = {
     'hero.yieldIncrease': 'Yield Increase',
     'hero.cropTypesSupported': 'Crop Types Supported',
     
+    // Features Section
     'features.title': 'Everything You Need for Smart Farming',
     'features.subtitle': 'Our comprehensive platform provides all the tools and insights you need to optimize your farming operations.',
     'features.preciseAnalysis.title': 'Precise Soil Analysis',
@@ -212,11 +221,13 @@ const translations = {
     'features.dataSecurity.title': 'Data Security',
     'features.dataSecurity.description': 'Your farm data is protected with enterprise-grade security and privacy measures.',
     
+    // CTA Section
     'cta.title': 'Ready to Transform Your Farming?',
     'cta.subtitle': 'Join thousands of farmers who are already using smart technology to increase their yields and reduce costs.',
     'cta.getStarted': 'Get Started Free',
     'cta.alreadyMember': 'Already a Member?',
     
+    // How It Works Section
     'howItWorks.title': 'How AgriCure Works',
     'howItWorks.subtitle': 'From sensor deployment to actionable recommendations in four simple steps',
     'howItWorks.step': 'STEP',
@@ -229,6 +240,7 @@ const translations = {
     'howItWorks.applyDashboard.title': 'Apply via Dashboard',
     'howItWorks.applyDashboard.description': 'Receive actionable insights through your dashboard or Variable Rate Application system.',
     
+    // Footer
     'footer.tagline': 'Empowering farmers with smart technology for sustainable and profitable agriculture.',
     'footer.product': 'Product',
     'footer.features': 'Features',
@@ -244,15 +256,18 @@ const translations = {
     'footer.careers': 'Careers',
     'footer.copyright': '© 2025 AgriCure. All rights reserved.',
     
+    // 404 Page
     'notFound.title': 'Page Not Found',
     'notFound.description': 'Oops! The page you\'re looking for doesn\'t exist or has been moved.',
     'notFound.goBack': 'Go Back',
     'notFound.returnHome': 'Return to Home',
     
+    // Recommendations Page
     'recommendations.title': 'Fertilizer Recommendations',
     'recommendations.subtitle': 'AI-powered recommendations for your field',
   },
   hi: {
+    // Navigation
     'nav.home': 'होम',
     'nav.features': 'विशेषताएं',
     'nav.howItWorks': 'कैसे काम करता है',
@@ -260,6 +275,7 @@ const translations = {
     'nav.signup': 'शुरू करें',
     'nav.start': 'शुरू',
     
+    // Dashboard
     'dashboard.title': 'डैशबोर्ड',
     'dashboard.subtitle': 'रीयल-टाइम डेटा और ML द्वारा संचालित व्यापक मिट्टी विश्लेषण और उर्वरक सिफारिशें',
     'dashboard.overview': 'खेत का अवलोकन',
@@ -341,19 +357,20 @@ const translations = {
     'dashboard.for': 'के लिए',
     'dashboard.farmerDashboard': 'किसान डैशबोर्ड',
     
+    // Profile
     'profile.failedToLoad': 'प्रोफ़ाइल डेटा लोड करने में विफल',
     'profile.profileUpdated': 'प्रोफ़ाइल अपडेट किया गया',
     'profile.profileUpdateSuccess': 'आपका प्रोफ़ाइल सफलतापूर्वक अपडेट किया गया है।',
     'profile.failedToUpdate': 'प्रोफ़ाइल अपडेट करने में विफल',
-  'profile.loadingProfile': 'प्रोफ़ाइल लोड हो रहा है...',
-  'profile.editProfile': 'प्रोफ़ाइल संपादित करें',
-  'profile.updatePersonalInfo': 'अपनी व्यक्तिगत जानकारी और उत्पाद आईडी अपडेट करें',
-  'profile.fullName': 'पूरा नाम',
-  'profile.enterFullName': 'अपना पूरा नाम दर्ज करें',
-  'profile.email': 'ईमेल',
-  'profile.enterEmail': 'अपना ईमेल दर्ज करें',
-  'profile.productId': 'उत्पाद आईडी',
-  'profile.cityStateCountry': 'शहर, राज्य, देश',
+    'profile.loadingProfile': 'प्रोफ़ाइल लोड हो रहा है...',
+    'profile.editProfile': 'प्रोफ़ाइल संपादित करें',
+    'profile.updatePersonalInfo': 'अपनी व्यक्तिगत जानकारी और खेत के विवरण अपडेट करें',
+    'profile.fullName': 'पूरा नाम',
+    'profile.enterFullName': 'अपना पूरा नाम दर्ज करें',
+    'profile.email': 'ईमेल',
+    'profile.enterEmail': 'अपना ईमेल दर्ज करें',
+    'profile.farmLocation': 'खेत का स्थान',
+    'profile.cityStateCountry': 'शहर, राज्य, देश',
     'profile.phoneNumber': 'फ़ोन नंबर',
     'profile.farmSize': 'खेत का आकार',
     'profile.unit': 'इकाई',
@@ -363,6 +380,7 @@ const translations = {
     'profile.saving': 'सहेज रहा है...',
     'profile.saveChanges': 'परिवर्तन सहेजें',
     
+    // Forms
     'form.fieldName': 'खेत का नाम',
     'form.fieldSize': 'खेत का आकार',
     'form.cropType': 'फसल का प्रकार',
@@ -387,6 +405,7 @@ const translations = {
     'form.noDataAvailable': 'कोई डेटा उपलब्ध नहीं है',
     'form.realTimeSensorDataNotAvailable': 'रीयल-टाइम सेंसर डेटा उपलब्ध नहीं है',
     
+    // Common
     'common.loading': 'लोड हो रहा है...',
     'common.error': 'त्रुटि',
     'common.success': 'सफलता',
@@ -398,6 +417,7 @@ const translations = {
     'common.no': 'नहीं',
     'common.back': 'वापस',
     
+    // Language switcher
     'language.english': 'English',
     'language.hindi': 'हिंदी',
     'language.punjabi': 'ਪੰਜਾਬੀ',
@@ -418,7 +438,7 @@ const translations = {
     'auth.signupAccount': 'अपना AgriCure खाता बनाएं',
     'auth.fullName': 'पूरा नाम',
     'auth.confirmPassword': 'पासवर्ड की पुष्टि करें',
-    'auth.productId': 'उत्पाद आईडी',
+    'auth.farmLocation': 'खेत का स्थान',
     'auth.accountCreated': 'खाता सफलतापूर्वक बनाया गया',
     'auth.welcomeToAgriCure': 'AgriCure में आपका स्वागत है! अब आप अपने खाते में साइन इन कर सकते हैं।',
     'auth.signupFailed': 'साइन अप विफल',
@@ -429,6 +449,7 @@ const translations = {
     'auth.alreadyHaveAccount': 'पहले से ही खाता है?',
     'auth.signInHere': 'यहां साइन इन करें',
     
+    // Hero Section
     'hero.title': 'बेहतर उपज के लिए',
     'hero.titleHighlight': 'स्मार्ट खेती',
     'hero.subtitle': 'अपने मिट्टी विश्लेषण के आधार पर व्यक्तिगत उर्वरक सिफारिशें प्राप्त करें। डेटा-संचालित खेती निर्णयों के साथ अपनी फसल की पैदावार को अधिकतम करें।',
@@ -438,6 +459,7 @@ const translations = {
     'hero.yieldIncrease': 'उपज में वृद्धि',
     'hero.cropTypesSupported': 'फसल प्रकार समर्थित',
     
+    // Features Section
     'features.title': 'स्मार्ट खेती के लिए आपको जो कुछ चाहिए',
     'features.subtitle': 'हमारा व्यापक प्लेटफॉर्म आपको अपने खेती संचालन को अनुकूलित करने के लिए आवश्यक सभी उपकरण और अंतर्दृष्टि प्रदान करता है।',
     'features.preciseAnalysis.title': 'सटीक मिट्टी विश्लेषण',
@@ -453,11 +475,13 @@ const translations = {
     'features.dataSecurity.title': 'डेटा सुरक्षा',
     'features.dataSecurity.description': 'आपका खेत डेटा एंटरप्राइज-ग्रेड सुरक्षा और गोपनीयता उपायों के साथ संरक्षित है।',
     
+    // CTA Section
     'cta.title': 'अपनी खेती को बदलने के लिए तैयार हैं?',
     'cta.subtitle': 'हजारों किसानों में शामिल हों जो पहले से ही अपनी उपज बढ़ाने और लागत कम करने के लिए स्मार्ट तकनीक का उपयोग कर रहे हैं।',
     'cta.getStarted': 'मुफ्त में शुरू करें',
     'cta.alreadyMember': 'पहले से ही सदस्य हैं?',
     
+    // How It Works Section
     'howItWorks.title': 'AgriCure कैसे काम करता है',
     'howItWorks.subtitle': 'सेंसर तैनाती से लेकर कार्रवाई योग्य सिफारिशों तक चार सरल चरणों में',
     'howItWorks.step': 'चरण',
@@ -470,6 +494,7 @@ const translations = {
     'howItWorks.applyDashboard.title': 'डैशबोर्ड के माध्यम से लागू करें',
     'howItWorks.applyDashboard.description': 'अपने डैशबोर्ड या Variable Rate Application सिस्टम के माध्यम से कार्रवाई योग्य अंतर्दृष्टि प्राप्त करें।',
     
+    // Footer
     'footer.tagline': 'टिकाऊ और लाभदायक कृषि के लिए स्मार्ट तकनीक के साथ किसानों को सशक्त बनाना।',
     'footer.product': 'उत्पाद',
     'footer.features': 'विशेषताएं',
@@ -485,12 +510,14 @@ const translations = {
     'footer.careers': 'करियर',
     'footer.copyright': '© 2025 AgriCure. सर्वाधिकार सुरक्षित।',
     
+    // 404 Page
     'notFound.title': 'पृष्ठ नहीं मिला',
     'notFound.description': 'उफ्फ! जिस पृष्ठ को आप खोज रहे हैं वह मौजूद नहीं है या स्थानांतरित कर दिया गया है।',
     'notFound.goBack': 'वापस जाएं',
     'notFound.returnHome': 'होम पर वापस जाएं',
   },
   pa: {
+    // Navigation
     'nav.home': 'ਹੋਮ',
     'nav.features': 'ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ',
     'nav.howItWorks': 'ਕਿਵੇਂ ਕੰਮ ਕਰਦਾ ਹੈ',
@@ -498,6 +525,7 @@ const translations = {
     'nav.signup': 'ਸ਼ੁਰੂ ਕਰੋ',
     'nav.start': 'ਸ਼ੁਰੂ',
     
+    // Dashboard
     'dashboard.title': 'ਡੈਸ਼ਬੋਰਡ',
     'dashboard.subtitle': 'ਰੀਅਲ-ਟਾਈਮ ਡੇਟਾ ਅਤੇ ML ਦੁਆਰਾ ਸੰਚਾਲਿਤ ਵਿਆਪਕ ਮਿੱਟੀ ਵਿਸ਼ਲੇਸ਼ਣ ਅਤੇ ਖਾਦ ਸਿਫਾਰਸ਼ਾਂ',
     'dashboard.overview': 'ਖੇਤ ਦਾ ਜਾਇਜ਼ਾ',
@@ -579,19 +607,20 @@ const translations = {
     'dashboard.for': 'ਲਈ',
     'dashboard.farmerDashboard': 'ਕਿਸਾਨ ਡੈਸ਼ਬੋਰਡ',
     
+    // Profile
     'profile.failedToLoad': 'ਪ੍ਰੋਫਾਈਲ ਡੇਟਾ ਲੋਡ ਕਰਨ ਵਿੱਚ ਅਸਫਲ',
     'profile.profileUpdated': 'ਪ੍ਰੋਫਾਈਲ ਅਪਡੇਟ ਕੀਤਾ ਗਿਆ',
     'profile.profileUpdateSuccess': 'ਤੁਹਾਡਾ ਪ੍ਰੋਫਾਈਲ ਸਫਲਤਾਪੂਰਵਕ ਅਪਡੇਟ ਕੀਤਾ ਗਿਆ ਹੈ।',
     'profile.failedToUpdate': 'ਪ੍ਰੋਫਾਈਲ ਅਪਡੇਟ ਕਰਨ ਵਿੱਚ ਅਸਫਲ',
-  'profile.loadingProfile': 'ਪ੍ਰੋਫਾਈਲ ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...',
-  'profile.editProfile': 'ਪ੍ਰੋਫਾਈਲ ਸੰਪਾਦਿਤ ਕਰੋ',
-  'profile.updatePersonalInfo': 'ਆਪਣੀ ਨਿੱਜੀ ਜਾਣਕਾਰੀ ਅਤੇ ਉਤਪਾਦ ਆਈਡੀ ਅਪਡੇਟ ਕਰੋ',
-  'profile.fullName': 'ਪੂਰਾ ਨਾਮ',
-  'profile.enterFullName': 'ਆਪਣਾ ਪੂਰਾ ਨਾਮ ਦਰਜ ਕਰੋ',
-  'profile.email': 'ਈਮੇਲ',
-  'profile.enterEmail': 'ਆਪਣਾ ਈਮੇਲ ਦਰਜ ਕਰੋ',
-  'profile.productId': 'ਉਤਪਾਦ ਆਈਡੀ',
-  'profile.cityStateCountry': 'ਸ਼ਹਿਰ, ਰਾਜ, ਦੇਸ਼',
+    'profile.loadingProfile': 'ਪ੍ਰੋਫਾਈਲ ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...',
+    'profile.editProfile': 'ਪ੍ਰੋਫਾਈਲ ਸੰਪਾਦਿਤ ਕਰੋ',
+    'profile.updatePersonalInfo': 'ਆਪਣੀ ਨਿੱਜੀ ਜਾਣਕਾਰੀ ਅਤੇ ਖੇਤ ਦੇ ਵੇਰਵੇ ਅਪਡੇਟ ਕਰੋ',
+    'profile.fullName': 'ਪੂਰਾ ਨਾਮ',
+    'profile.enterFullName': 'ਆਪਣਾ ਪੂਰਾ ਨਾਮ ਦਰਜ ਕਰੋ',
+    'profile.email': 'ਈਮੇਲ',
+    'profile.enterEmail': 'ਆਪਣਾ ਈਮੇਲ ਦਰਜ ਕਰੋ',
+    'profile.farmLocation': 'ਖੇਤ ਦਾ ਸਥਾਨ',
+    'profile.cityStateCountry': 'ਸ਼ਹਿਰ, ਰਾਜ, ਦੇਸ਼',
     'profile.phoneNumber': 'ਫੋਨ ਨੰਬਰ',
     'profile.farmSize': 'ਖੇਤ ਦਾ ਆਕਾਰ',
     'profile.unit': 'ਯੂਨਿਟ',
@@ -601,6 +630,7 @@ const translations = {
     'profile.saving': 'ਸੇਵ ਕਰ ਰਿਹਾ ਹੈ...',
     'profile.saveChanges': 'ਬਦਲਾਅ ਸੇਵ ਕਰੋ',
     
+    // Forms
     'form.fieldName': 'ਖੇਤ ਦਾ ਨਾਮ',
     'form.fieldSize': 'ਖੇਤ ਦਾ ਆਕਾਰ',
     'form.cropType': 'ਫਸਲ ਦਾ ਕਿਸਮ',
@@ -625,6 +655,7 @@ const translations = {
     'form.noDataAvailable': 'ਕੋਈ ਡੇਟਾ ਉਪਲਬਧ ਨਹੀਂ ਹੈ',
     'form.realTimeSensorDataNotAvailable': 'ਰੀਅਲ-ਟਾਈਮ ਸੈਂਸਰ ਡੇਟਾ ਉਪਲਬਧ ਨਹੀਂ ਹੈ',
     
+    // Common
     'common.loading': 'ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...',
     'common.error': 'ਗਲਤੀ',
     'common.success': 'ਸਫਲਤਾ',
@@ -636,6 +667,7 @@ const translations = {
     'common.no': 'ਨਹੀਂ',
     'common.back': 'ਵਾਪਸ',
     
+    // Language switcher
     'language.english': 'English',
     'language.hindi': 'हिंदी',
     'language.punjabi': 'ਪੰਜਾਬੀ',
@@ -656,7 +688,7 @@ const translations = {
     'auth.signupAccount': 'ਆਪਣਾ AgriCure ਖਾਤਾ ਬਣਾਓ',
     'auth.fullName': 'ਪੂਰਾ ਨਾਮ',
     'auth.confirmPassword': 'ਪਾਸਵਰਡ ਦੀ ਪੁਸ਼ਟੀ ਕਰੋ',
-    'auth.productId': 'ਉਤਪਾਦ ਆਈ.ਡੀ',
+    'auth.farmLocation': 'ਖੇਤ ਦਾ ਸਥਾਨ',
     'auth.accountCreated': 'ਖਾਤਾ ਸਫਲਤਾਪੂਰਵਕ ਬਣਾਇਆ ਗਿਆ',
     'auth.welcomeToAgriCure': 'AgriCure ਵਿੱਚ ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ! ਹੁਣ ਤੁਸੀਂ ਆਪਣੇ ਖਾਤੇ ਵਿੱਚ ਸਾਈਨ ਇਨ ਕਰ ਸਕਦੇ ਹੋ।',
     'auth.signupFailed': 'ਸਾਈਨ ਅਪ ਅਸਫਲ',
@@ -667,6 +699,7 @@ const translations = {
     'auth.alreadyHaveAccount': 'ਪਹਿਲਾਂ ਤੋਂ ਹੀ ਖਾਤਾ ਹੈ?',
     'auth.signInHere': 'ਇੱਥੇ ਸਾਈਨ ਇਨ ਕਰੋ',
     
+    // Hero Section
     'hero.title': 'ਬਿਹਤਰ ਫਸਲਾਂ ਲਈ',
     'hero.titleHighlight': 'ਸਮਾਰਟ ਖੇਤੀਬਾੜੀ',
     'hero.subtitle': 'ਆਪਣੇ ਮਿੱਟੀ ਵਿਸ਼ਲੇਸ਼ਣ ਦੇ ਆਧਾਰ ਤੇ ਨਿੱਜੀ ਖਾਦ ਸਿਫਾਰਸ਼ਾਂ ਪ੍ਰਾਪਤ ਕਰੋ। ਡੇਟਾ-ਆਧਾਰਿਤ ਖੇਤੀਬਾੜੀ ਫੈਸਲਿਆਂ ਨਾਲ ਆਪਣੀ ਫਸਲ ਦੀ ਪੈਦਾਵਾਰ ਨੂੰ ਵੱਧ ਤੋਂ ਵੱਧ ਕਰੋ।',
@@ -676,6 +709,7 @@ const translations = {
     'hero.yieldIncrease': 'ਫਸਲ ਵਾਧਾ',
     'hero.cropTypesSupported': 'ਫਸਲ ਦੀਆਂ ਕਿਸਮਾਂ ਸਮਰਥਿਤ',
     
+    // Features Section
     'features.title': 'ਸਮਾਰਟ ਖੇਤੀਬਾੜੀ ਲਈ ਤੁਹਾਨੂੰ ਜੋ ਕੁਝ ਚਾਹੀਦਾ ਹੈ',
     'features.subtitle': 'ਸਾਡਾ ਵਿਆਪਕ ਪਲੇਟਫਾਰਮ ਤੁਹਾਨੂੰ ਆਪਣੇ ਖੇਤੀਬਾੜੀ ਕਾਰਜਾਂ ਨੂੰ ਅਨੁਕੂਲ ਬਣਾਉਣ ਲਈ ਲੋੜੀਂਦੇ ਸਾਰੇ ਟੂਲ ਅਤੇ ਸੂਝ ਪ੍ਰਦਾਨ ਕਰਦਾ ਹੈ।',
     'features.preciseAnalysis.title': 'ਸ਼ੁੱਧ ਮਿੱਟੀ ਵਿਸ਼ਲੇਸ਼ਣ',
@@ -691,11 +725,13 @@ const translations = {
     'features.dataSecurity.title': 'ਡੇਟਾ ਸੁਰੱਖਿਆ',
     'features.dataSecurity.description': 'ਤੁਹਾਡਾ ਖੇਤ ਡੇਟਾ ਐਂਟਰਪ੍ਰਾਈਜ਼-ਗ੍ਰੇਡ ਸੁਰੱਖਿਆ ਅਤੇ ਗੋਪਨੀਯਤਾ ਉਪਾਵਾਂ ਨਾਲ ਸੁਰੱਖਿਅਤ ਹੈ।',
     
+    // CTA Section
     'cta.title': 'ਆਪਣੀ ਖੇਤੀਬਾੜੀ ਨੂੰ ਬਦਲਣ ਲਈ ਤਿਆਰ ਹੋ?',
     'cta.subtitle': 'ਹਜ਼ਾਰਾਂ ਕਿਸਾਨਾਂ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਵੋ ਜੋ ਪਹਿਲਾਂ ਤੋਂ ਹੀ ਆਪਣੀ ਫਸਲ ਵਧਾਉਣ ਅਤੇ ਲਾਗਤ ਘਟਾਉਣ ਲਈ ਸਮਾਰਟ ਤਕਨਾਲੋਜੀ ਦੀ ਵਰਤੋਂ ਕਰ ਰਹੇ ਹਨ।',
     'cta.getStarted': 'ਮੁਫਤ ਵਿੱਚ ਸ਼ੁਰੂ ਕਰੋ',
     'cta.alreadyMember': 'ਪਹਿਲਾਂ ਤੋਂ ਹੀ ਮੈਂਬਰ ਹੋ?',
     
+    // How It Works Section
     'howItWorks.title': 'AgriCure ਕਿਵੇਂ ਕੰਮ ਕਰਦਾ ਹੈ',
     'howItWorks.subtitle': 'ਸੈਂਸਰ ਤੈਨਾਤੀ ਤੋਂ ਕਾਰਵਾਈ ਯੋਗ ਸਿਫਾਰਸ਼ਾਂ ਤੱਕ ਚਾਰ ਸਧਾਰਨ ਕਦਮਾਂ ਵਿੱਚ',
     'howItWorks.step': 'ਕਦਮ',
@@ -708,6 +744,7 @@ const translations = {
     'howItWorks.applyDashboard.title': 'ਡੈਸ਼ਬੋਰਡ ਰਾਹੀਂ ਲਾਗੂ ਕਰੋ',
     'howItWorks.applyDashboard.description': 'ਆਪਣੇ ਡੈਸ਼ਬੋਰਡ ਜਾਂ Variable Rate Application ਸਿਸਟਮ ਰਾਹੀਂ ਕਾਰਵਾਈ ਯੋਗ ਸੂਝਾਂ ਪ੍ਰਾਪਤ ਕਰੋ।',
     
+    // Footer
     'footer.tagline': 'ਟਿਕਾਊ ਅਤੇ ਲਾਭਦਾਇਕ ਖੇਤੀਬਾੜੀ ਲਈ ਸਮਾਰਟ ਤਕਨਾਲੋਜੀ ਨਾਲ ਕਿਸਾਨਾਂ ਨੂੰ ਸਸ਼ਕਤ ਬਣਾਉਣਾ।',
     'footer.product': 'ਉਤਪਾਦ',
     'footer.features': 'ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ',
@@ -723,6 +760,7 @@ const translations = {
     'footer.careers': 'ਕਰੀਅਰ',
     'footer.copyright': '© 2025 AgriCure. ਸਾਰੇ ਅਧਿਕਾਰ ਸੁਰੱਖਿਅਤ।',
     
+    // 404 Page
     'notFound.title': 'ਪੰਨਾ ਨਹੀਂ ਮਿਲਿਆ',
     'notFound.description': 'ਉਫ਼! ਜਿਸ ਪੰਨੇ ਨੂੰ ਤੁਸੀਂ ਖੋਜ ਰਹੇ ਹੋ ਉਹ ਮੌਜੂਦ ਨਹੀਂ ਹੈ ਜਾਂ ਸਥਾਨਾਂਤਰਿਤ ਕਰ ਦਿੱਤਾ ਗਿਆ ਹੈ।',
     'notFound.goBack': 'ਵਾਪਸ ਜਾਓ',
@@ -766,4 +804,4 @@ export const useLanguage = (): LanguageContextType => {
     throw new Error('useLanguage must be used within a LanguageProvider');
   }
   return context;
-};
+}; 
