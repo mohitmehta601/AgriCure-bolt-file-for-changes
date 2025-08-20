@@ -101,5 +101,3 @@ The **Smart Fertilizer Recommendation System** integrates **IoT sensors + Machin
 
 ---
 
-## 🚀 Getting Started
-
