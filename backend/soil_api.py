@@ -7,21 +7,14 @@ import json
 logger = logging.getLogger(__name__)
 
 class SoilDataAPI:
-    """Service to fetch soil data from external APIs based on coordinates"""
     
     def __init__(self):
         self.logger = logger
-        # Cache to store soil data to avoid repeated API calls
         self.cache = {}
     
     def get_soil_data_by_location(self, latitude: float, longitude: float) -> Dict:
-        """
-        Get comprehensive soil data from multiple sources based on coordinates
-        Returns soil type and properties
-        """
         cache_key = f"{latitude:.4f},{longitude:.4f}"
         
-        # Check cache first
         if cache_key in self.cache:
             self.logger.info(f"Returning cached soil data for {cache_key}")
             return self.cache[cache_key]
@@ -33,14 +26,13 @@ class SoilDataAPI:
                 'timestamp': datetime.now().isoformat()
             },
             'soil_properties': {},
-            'soil_type': 'Loamy',  # Default fallback
+            'soil_type': 'Loamy',
             'confidence': 0.0,
             'sources': [],
             'success': False
         }
         
         try:
-            # Primary: Try SoilGrids API (most reliable for global coverage)
             soilgrids_data = self._get_soilgrids_data(latitude, longitude)
             if soilgrids_data:
                 soil_data['soil_properties'].update(soilgrids_data)
@@ -48,16 +40,13 @@ class SoilDataAPI:
                 soil_data['success'] = True
                 soil_data['confidence'] = 0.8
             
-            # Classify soil type based on texture
             if soil_data['soil_properties']:
                 soil_data['soil_type'] = self._classify_soil_type(soil_data['soil_properties'])
                 
-            # Cache the result
             self.cache[cache_key] = soil_data
             
         except Exception as e:
             self.logger.error(f"Error fetching soil data for {latitude}, {longitude}: {e}")
-            # Return default data on error
             soil_data['soil_type'] = 'Loamy'
             soil_data['confidence'] = 0.1
             soil_data['sources'] = ['Default']
@@ -65,16 +54,14 @@ class SoilDataAPI:
         return soil_data
     
     def _get_soilgrids_data(self, lat: float, lon: float) -> Optional[Dict]:
-        """Fetch soil data from ISRIC SoilGrids API"""
         try:
             url = "https://rest.isric.org/soilgrids/v2.0/properties/query"
             
-            # Request key soil properties
             params = {
                 'lon': lon,
                 'lat': lat,
                 'property': ['clay', 'sand', 'silt', 'phh2o', 'cec', 'nitrogen', 'soc'],
-                'depth': ['0-5cm', '5-15cm'],  # Top soil layers
+                'depth': ['0-5cm', '5-15cm'],
                 'value': 'mean'
             }
             
@@ -85,11 +72,9 @@ class SoilDataAPI:
             data = response.json()
             processed_data = {}
             
-            # Process the response
             for prop in data.get('properties', []):
                 prop_name = prop['name']
                 if prop['depths'] and len(prop['depths']) > 0:
-                    # Use surface layer (0-5cm) data
                     surface_layer = prop['depths'][0]
                     if 'values' in surface_layer and 'mean' in surface_layer['values']:
                         processed_data[prop_name] = surface_layer['values']['mean']
@@ -105,17 +90,11 @@ class SoilDataAPI:
             return None
     
     def _classify_soil_type(self, properties: Dict) -> str:
-        """
-        Classify soil type based on USDA Soil Texture Triangle
-        Uses clay, sand, silt percentages to determine soil type
-        """
         try:
-            # SoilGrids returns values in g/kg, convert to percentages
-            clay = properties.get('clay', 200) / 10  # Convert to percentage
+            clay = properties.get('clay', 200) / 10
             sand = properties.get('sand', 400) / 10
             silt = properties.get('silt', 400) / 10
             
-            # Normalize if total doesn't equal 100%
             total = clay + sand + silt
             if total > 0:
                 clay = (clay / total) * 100
@@ -124,7 +103,6 @@ class SoilDataAPI:
             
             self.logger.info(f"Soil texture: Clay={clay:.1f}%, Sand={sand:.1f}%, Silt={silt:.1f}%")
             
-            # USDA Soil Texture Classification
             if clay >= 40:
                 if sand >= 45:
                     return "Sandy Clay"
@@ -175,16 +153,14 @@ class SoilDataAPI:
                 else:
                     return "Silt Loam"
             else:
-                return "Loam"  # Default case
+                return "Loam"
                 
         except Exception as e:
             self.logger.error(f"Error classifying soil type: {e}")
-            return "Loamy"  # Safe fallback
+            return "Loamy"
     
     def get_location_info(self, latitude: float, longitude: float) -> Dict:
-        """Get location information using reverse geocoding"""
         try:
-            # Using a simple reverse geocoding service
             url = f"https://api.bigdatacloud.net/data/reverse-geocode-client"
             params = {
                 'latitude': latitude,
@@ -217,5 +193,4 @@ class SoilDataAPI:
                 'formatted_address': []
             }
 
-# Create global instance
 soil_data_api = SoilDataAPI()

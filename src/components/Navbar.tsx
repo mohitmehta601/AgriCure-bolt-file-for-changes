@@ -17,7 +17,7 @@ const Navbar = () => {
         block: 'start'
       });
     }
-    setIsMenuOpen(false); // Close mobile menu after clicking
+    setIsMenuOpen(false);
   };
 
   return (
@@ -29,7 +29,6 @@ const Navbar = () => {
             <span className="text-2xl font-bold text-grass-800">AgriCure</span>
           </Link>
           
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <button 
               onClick={() => scrollToSection('home')}
@@ -51,7 +50,6 @@ const Navbar = () => {
             </button>
           </div>
           
-          {/* Desktop Auth Buttons and Language Switcher - Always Visible */}
           <div className="hidden sm:flex items-center space-x-4">
             <LanguageSwitcher />
             <Button asChild variant="ghost">
@@ -62,7 +60,6 @@ const Navbar = () => {
             </Button>
           </div>
 
-          {/* Mobile Auth Buttons - Visible on small screens */}
           <div className="flex sm:hidden items-center space-x-2">
             <Button asChild variant="ghost" size="sm">
               <Link to="/login">{t('nav.login')}</Link>
@@ -72,7 +69,6 @@ const Navbar = () => {
             </Button>
           </div>
 
-          {/* Mobile Menu Button - Only for navigation links */}
           <button
             className="md:hidden p-2 ml-2"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -86,7 +82,6 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* Mobile Navigation Menu - Navigation links and language switcher */}
         {isMenuOpen && (
           <div className="md:hidden mt-4 pb-4 border-t border-gray-200">
             <div className="flex flex-col space-y-4 pt-4">
@@ -109,7 +104,6 @@ const Navbar = () => {
                 {t('nav.howItWorks')}
               </button>
               
-              {/* Language Switcher in Mobile Menu */}
               <div className="pt-2 border-t border-gray-200">
                 <div className="flex items-center justify-between py-2">
                   <span className="text-sm font-medium text-gray-700">{t('language.select')}</span>

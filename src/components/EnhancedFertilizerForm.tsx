@@ -67,7 +67,6 @@ const EnhancedFertilizerForm = ({ onSubmit, user }: EnhancedFertilizerFormProps)
   }, [user]);
 
   useEffect(() => {
-    // Auto-fill with real-time data when component loads
     if (realTimeData) {
       setFormData(prev => ({
         ...prev,
@@ -179,12 +178,10 @@ const EnhancedFertilizerForm = ({ onSubmit, user }: EnhancedFertilizerFormProps)
         description: 'Farm added successfully',
       });
       
-      // Reload farms and close dialog
       await loadFarms();
       setIsAddFarmOpen(false);
       setNewFarm({ name: '', size: '', unit: 'hectares', cropType: '', soilType: '', location: '' });
       
-      // Auto-select the new farm
       if (data) {
         handleFarmSelect(data.id);
       }
@@ -215,7 +212,6 @@ const EnhancedFertilizerForm = ({ onSubmit, user }: EnhancedFertilizerFormProps)
     setIsLoading(true);
 
     try {
-      // Prepare input for ML API
       const mlInput: FertilizerPredictionInput = {
         Temperature: parseFloat(formData.temperature),
         Humidity: parseFloat(formData.humidity),
@@ -227,7 +223,6 @@ const EnhancedFertilizerForm = ({ onSubmit, user }: EnhancedFertilizerFormProps)
         Phosphorous: parseFloat(formData.phosphorus)
       };
 
-      // Validate input
       const validation = mlApiService.validateInput(mlInput);
       if (!validation.isValid) {
         toast({
@@ -239,10 +234,8 @@ const EnhancedFertilizerForm = ({ onSubmit, user }: EnhancedFertilizerFormProps)
         return;
       }
 
-      // Get ML prediction
       const prediction = await mlApiService.getPrediction(mlInput);
       
-      // Call onSubmit with enhanced data including ML prediction and farm info
       const enhancedData = {
         ...formData,
         mlPrediction: prediction.fertilizer,

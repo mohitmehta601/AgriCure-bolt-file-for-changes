@@ -146,7 +146,6 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
     setSaving(true);
     try {
       if (editingFarm) {
-        // Update existing farm
         const updateData: UpdateFarmData = {
           name: newFarm.name,
           size: sizeNum,
@@ -154,14 +153,6 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
           crop_type: newFarm.cropType,
           soil_type: newFarm.soilType,
           location: newFarm.location || undefined
-          // TODO: Re-enable after database migration
-          // ...(newFarm.coordinates && {
-          //   latitude: newFarm.coordinates.latitude,
-          //   longitude: newFarm.coordinates.longitude,
-          // }),
-          // ...(newFarm.soilData && {
-          //   soil_data: JSON.stringify(newFarm.soilData)
-          // })
         };
         
         const { data, error } = await farmService.updateFarm(editingFarm.id, updateData);
@@ -181,14 +172,6 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
           crop_type: newFarm.cropType,
           soil_type: newFarm.soilType,
           location: newFarm.location || undefined
-          // TODO: Re-enable after database migration
-          // ...(newFarm.coordinates && {
-          //   latitude: newFarm.coordinates.latitude,
-          //   longitude: newFarm.coordinates.longitude,
-          // }),
-          // ...(newFarm.soilData && {
-          //   soil_data: JSON.stringify(newFarm.soilData)
-          // })
         };
         
         const { data, error } = await farmService.createFarm(farmData);
@@ -200,7 +183,6 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
         });
       }
       
-      // Reload farms and close dialog
       await loadFarms();
       handleCloseDialog();
     } catch (error) {
@@ -248,8 +230,8 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
       cropType: farm.crop_type,
       soilType: farm.soil_type,
       location: farm.location || '',
-      coordinates: null, // Reset coordinates for editing
-      soilData: null // Reset soil data for editing
+      coordinates: null,
+      soilData: null
     });
     setIsAddOpen(true);
   };
@@ -283,7 +265,6 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
     try {
       const { location, soilData, locationString } = await LocationSoilService.getLocationAndSoilData();
       
-      // Update form with detected location and soil data
       setNewFarm(prev => ({
         ...prev,
         location: locationString,

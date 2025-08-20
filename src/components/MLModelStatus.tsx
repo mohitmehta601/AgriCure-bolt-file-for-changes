@@ -16,12 +16,10 @@ const MLModelStatus = () => {
   const checkModelStatus = async () => {
     setIsLoading(true);
     try {
-      // Check health first
       const health = await mlApiService.healthCheck();
       setIsConnected(health.model_loaded);
       
       if (health.model_loaded) {
-        // Get detailed model info
         const info = await mlApiService.getModelInfo();
         setModelInfo(info);
       }
@@ -44,7 +42,6 @@ const MLModelStatus = () => {
   useEffect(() => {
     checkModelStatus();
     
-    // Check status every 5 minutes
     const interval = setInterval(checkModelStatus, 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);

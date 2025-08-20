@@ -17,7 +17,6 @@ const RealTimeSoilAnalysis = () => {
     try {
       const historicalData = await fetchThingSpeakHistoricalData(24);
       if (historicalData && historicalData.length > 0) {
-        // Transform data for charts with proper time formatting
         const chartData = historicalData.map((item, index) => {
           const timestamp = new Date(item.timestamp);
           const now = new Date();
@@ -33,12 +32,11 @@ const RealTimeSoilAnalysis = () => {
             humidity: item.humidity,
             ph: item.soilPH
           };
-        }).reverse(); // Reverse to show oldest to newest
+        }).reverse();
         setHistoricalData(chartData);
       }
     } catch (error) {
       console.error('Error loading historical data:', error);
-      // Fallback to mock data
       const mockHistorical = Array.from({ length: 24 }, (_, i) => ({
         time: `${23 - i}h ago`,
         nitrogen: 40 + Math.random() * 20,
@@ -47,7 +45,7 @@ const RealTimeSoilAnalysis = () => {
         moisture: 60 + Math.random() * 20,
         temperature: 20 + Math.random() * 10,
         humidity: 65 + Math.random() * 20,
-        ph: 6.5 // constant value as requested
+        ph: 6.5
       }));
       setHistoricalData(mockHistorical);
     }
@@ -56,7 +54,6 @@ const RealTimeSoilAnalysis = () => {
   useEffect(() => {
     loadHistoricalData();
 
-    // Auto-refresh every 2 minutes
     const interval = setInterval(() => {
       loadHistoricalData();
     }, 2 * 60 * 1000);
@@ -66,13 +63,11 @@ const RealTimeSoilAnalysis = () => {
   type NutrientType = 'nitrogen' | 'phosphorus' | 'potassium';
 
   const getNutrientStatus = (type: NutrientType, value: number) => {
-    // Custom thresholds per user spec
     if (type === 'nitrogen') {
       if (value > 180) return { status: 'critical', color: 'text-red-600' };
       if (value >= 81) return { status: 'optimal', color: 'text-green-600' };
       return { status: 'warning', color: 'text-yellow-600' };
     }
-    // phosphorus and potassium share the same thresholds
     if (value > 350) return { status: 'critical', color: 'text-red-600' };
     if (value >= 111) return { status: 'optimal', color: 'text-green-600' };
     return { status: 'warning', color: 'text-yellow-600' };
@@ -169,7 +164,6 @@ const RealTimeSoilAnalysis = () => {
             <div className="text-lg sm:text-2xl font-bold mb-2">{data?.soilPH.toFixed(1)}</div>
             <Progress value={clampPercent(((data?.soilPH ?? 0) / 14) * 100)} className="h-1 sm:h-2 mb-2" />
             {(() => {
-              // Preserve previous heuristics for non-NPK parameters
               const value = data?.soilPH ?? 0;
               const min = 6.0, max = 7.5;
               const status = (value >= min && value <= max) ? 'optimal' : (value < min * 0.8 || value > max * 1.2) ? 'critical' : 'warning';

@@ -55,7 +55,6 @@ export const MLTestComponent = () => {
     setIsLoading(true);
 
     try {
-      // Validate input
       const validation = mlApiService.validateInput(formData);
       if (!validation.isValid) {
         toast({
@@ -66,7 +65,6 @@ export const MLTestComponent = () => {
         return;
       }
 
-      // Get prediction
       const result = await mlApiService.getPrediction(formData);
       setPrediction(result.fertilizer);
       

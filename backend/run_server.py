@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-"""
-Simple server runner for the Fertilizer Recommendation API
-"""
 
 import uvicorn
 from main import app

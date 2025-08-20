@@ -3,7 +3,6 @@ import pickle
 
 app = Flask(__name__)
 
-#importing pickle files
 model = pickle.load(open('classifier.pkl','rb'))
 ferti = pickle.load(open('fertilizer.pkl','rb'))
 
@@ -19,8 +18,6 @@ def Model1():
 def Detail():
     return render_template('Detail.html')
 
-
-
 @app.route('/predict',methods=['POST'])
 def predict():
     temp = request.form.get('temp')
@@ -34,7 +31,6 @@ def predict():
     if None in (temp, humi, mois, soil, crop, nitro, pota, phosp) or not all(val.isdigit() for val in (temp, humi, mois, soil, crop, nitro, pota, phosp)):
         return render_template('Model1.html', x='Invalid input. Please provide numeric values for all fields.')
 
-# Convert values to integers
     input = [int(temp), int(humi), int(mois), int(soil), int(crop), int(nitro), int(pota), int(phosp)]
     res = ferti.classes_[model.predict([input])]
     return render_template('Model1.html', x=res)

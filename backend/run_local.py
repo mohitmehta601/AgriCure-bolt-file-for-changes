@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
-"""
-Local development script to run the FastAPI server
-"""
+
 import uvicorn
 import os
 import sys
 
 if __name__ == "__main__":
-    # Add the current directory to Python path
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     
     print("Starting AgriCure ML API server...")

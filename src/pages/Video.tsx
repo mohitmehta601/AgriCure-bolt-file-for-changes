@@ -40,7 +40,6 @@ const Video: React.FC<VideoProps> = ({
   const [screenSize, setScreenSize] = useState({ width: 0, height: 0 });
   const [videoAspectRatio, setVideoAspectRatio] = useState(16/9);
 
-  // Detect screen size and device type
   useEffect(() => {
     const updateScreenSize = () => {
       setScreenSize({
@@ -54,7 +53,6 @@ const Video: React.FC<VideoProps> = ({
     return () => window.removeEventListener('resize', updateScreenSize);
   }, []);
 
-  // Get video aspect ratio when metadata loads
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -80,7 +78,6 @@ const Video: React.FC<VideoProps> = ({
     };
   }, []);
 
-  // Auto-hide controls
   useEffect(() => {
     let timeout: NodeJS.Timeout;
     
@@ -109,31 +106,25 @@ const Video: React.FC<VideoProps> = ({
     };
   }, [isPlaying, screenSize.width]);
 
-  // Calculate responsive video dimensions
   const getVideoStyles = () => {
     const { width: screenWidth, height: screenHeight } = screenSize;
     const isMobile = screenWidth < 768;
     const isTablet = screenWidth >= 768 && screenWidth < 1024;
     const isDesktop = screenWidth >= 1024;
 
-    // Calculate available space (accounting for controls)
     const controlsHeight = isMobile ? 80 : 100;
     const availableHeight = screenHeight - controlsHeight;
     const availableWidth = screenWidth;
 
-    // Calculate video dimensions based on aspect ratio
     let videoWidth = availableWidth;
     let videoHeight = availableWidth / videoAspectRatio;
 
-    // If video height exceeds available space, scale down
     if (videoHeight > availableHeight) {
       videoHeight = availableHeight;
       videoWidth = availableHeight * videoAspectRatio;
     }
 
-    // Device-specific adjustments
     if (isMobile) {
-      // Mobile: Full width, maintain aspect ratio
       return {
         width: '100vw',
         height: '100vh',
@@ -142,7 +133,6 @@ const Video: React.FC<VideoProps> = ({
         maxHeight: '100%'
       };
     } else if (isTablet) {
-      // Tablet: Responsive with some padding
       return {
         width: `${Math.min(videoWidth, screenWidth * 0.95)}px`,
         height: `${Math.min(videoHeight, screenHeight * 0.9)}px`,
@@ -151,7 +141,6 @@ const Video: React.FC<VideoProps> = ({
         maxHeight: '90vh'
       };
     } else {
-      // Desktop: Centered with optimal sizing
       return {
         width: `${Math.min(videoWidth, screenWidth * 0.9)}px`,
         height: `${Math.min(videoHeight, screenHeight * 0.85)}px`,

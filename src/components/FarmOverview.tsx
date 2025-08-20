@@ -7,7 +7,6 @@ const FarmOverview = ({ soilData, recommendations }) => {
   const getHealthScore = () => {
     if (!soilData) return 0;
     
-    // Simple health scoring based on optimal ranges
     let score = 0;
     const pH = parseFloat(soilData.pH);
     const nitrogen = parseFloat(soilData.nitrogen);
@@ -15,12 +14,10 @@ const FarmOverview = ({ soilData, recommendations }) => {
     const potassium = parseFloat(soilData.potassium);
     const organicMatter = parseFloat(soilData.organicMatter);
     
-    // pH scoring (optimal 6.0-7.5)
     if (pH >= 6.0 && pH <= 7.5) score += 20;
     else if (pH >= 5.5 && pH <= 8.0) score += 15;
     else score += 5;
     
-    // Nutrient scoring (basic ranges)
     if (nitrogen >= 20) score += 20;
     else if (nitrogen >= 10) score += 15;
     else score += 5;

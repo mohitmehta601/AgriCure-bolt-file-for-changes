@@ -1,4 +1,3 @@
-// Service to interact with the FastAPI ML backend
 export interface FertilizerPredictionInput {
   Temperature: number;
   Humidity: number;
@@ -52,7 +51,6 @@ class MLApiService {
   private baseUrl: string;
 
   constructor() {
-    // Use localhost for development, change this to your deployed API URL
     this.baseUrl = 'http://localhost:8000';
   }
 
@@ -110,7 +108,6 @@ class MLApiService {
     }
   }
 
-  // Helper method to validate input ranges
   validateInput(input: FertilizerPredictionInput): { isValid: boolean; errors: string[] } {
     const errors: string[] = [];
 

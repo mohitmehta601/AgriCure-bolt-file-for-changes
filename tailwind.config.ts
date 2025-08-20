@@ -53,7 +53,6 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				// Agricultural theme colors
 				earth: {
 					50: '#f7f5f3',
 					100: '#ede8e0',

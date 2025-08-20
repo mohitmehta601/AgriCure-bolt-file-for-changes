@@ -1,12 +1,11 @@
-// Service to handle fertilizer ML predictions
 import { mlApiService } from './mlApiService';
 
 export interface MLPredictionInput {
   temperature: number;
   humidity: number;
   moisture: number;
-  soilType: number; // 0: Black, 1: Clayey, 2: Loamy, 3: Red, 4: Sandy
-  cropType: number; // Based on ML model crop types
+  soilType: number;
+  cropType: number;
   nitrogen: number;
   potassium: number;
   phosphorus: number;
@@ -17,7 +16,6 @@ export interface MLPredictionResult {
   confidence: number;
 }
 
-// Crop type mapping based on the ML model data - MUST MATCH BACKEND
 export const CROP_TYPES = {
   'rice': 0,
   'Wheat': 1,
@@ -46,7 +44,6 @@ export const SOIL_TYPES = {
   'Sandy': 4
 };
 
-// Fertilizer information based on the ML model training data
 export const FERTILIZER_INFO = {
   'Urea': {
     description: 'High nitrogen content fertilizer (46% N)',
@@ -148,10 +145,8 @@ export const FERTILIZER_INFO = {
   }
 };
 
-// ML-based prediction function (simulates the trained model)
 export const predictFertilizer = async (input: MLPredictionInput): Promise<MLPredictionResult> => {
   try {
-    // Convert input format to match the ML API
     const cropName = Object.keys(CROP_TYPES).find(key => CROP_TYPES[key as keyof typeof CROP_TYPES] === cropType) || 'Wheat';
     const soilName = Object.keys(SOIL_TYPES).find(key => SOIL_TYPES[key as keyof typeof SOIL_TYPES] === soilType) || 'Loamy';
     
@@ -166,7 +161,6 @@ export const predictFertilizer = async (input: MLPredictionInput): Promise<MLPre
       Phosphorous: phosphorus
     };
 
-    // Call the ML API
     const response = await mlApiService.predict(mlInput);
     
     return {
@@ -176,14 +170,12 @@ export const predictFertilizer = async (input: MLPredictionInput): Promise<MLPre
   } catch (error) {
     console.error('ML API prediction failed, falling back to rule-based prediction:', error);
     
-    // Fallback to rule-based prediction if ML API fails
     const { temperature, humidity, moisture, soilType, cropType, nitrogen, potassium, phosphorus } = input;
 
-    let predictedFertilizer = 'Urea'; // Default
+    let predictedFertilizer = 'Urea';
     let confidence = 85;
 
-    // High-level decision tree based on ML model patterns - Updated to match new mappings
-    if (cropType === 0 || cropType === 4) { // rice or paddy
+    if (cropType === 0 || cropType === 4) {
       if (nitrogen < 50) {
         predictedFertilizer = 'Urea';
         confidence = 92;
@@ -194,7 +186,7 @@ export const predictFertilizer = async (input: MLPredictionInput): Promise<MLPre
         predictedFertilizer = 'TSP';
         confidence = 85;
       }
-    } else if (cropType === 1) { // wheat
+    } else if (cropType === 1) {
       if (phosphorus < 20) {
         predictedFertilizer = 'DAP';
         confidence = 94;
@@ -205,7 +197,7 @@ export const predictFertilizer = async (input: MLPredictionInput): Promise<MLPre
         predictedFertilizer = '20-20';
         confidence = 86;
       }
-    } else if (cropType === 10) { // cotton
+    } else if (cropType === 10) {
       if (potassium < 30) {
         predictedFertilizer = 'Potassium sulfate';
         confidence = 91;
@@ -216,7 +208,7 @@ export const predictFertilizer = async (input: MLPredictionInput): Promise<MLPre
         predictedFertilizer = '14-35-14';
         confidence = 84;
       }
-    } else if (cropType === 5 || cropType === 13 || cropType === 16) { // fruits (pomegranate, barley, tea)
+    } else if (cropType === 5 || cropType === 13 || cropType === 16) {
       if (phosphorus > 30) {
         predictedFertilizer = '14-14-14';
         confidence = 90;
@@ -227,10 +219,10 @@ export const predictFertilizer = async (input: MLPredictionInput): Promise<MLPre
         predictedFertilizer = 'TSP';
         confidence = 85;
       }
-    } else if (cropType === 3) { // pulses
+    } else if (cropType === 3) {
       predictedFertilizer = '15-15-15';
       confidence = 93;
-    } else if (cropType === 11) { // coffee
+    } else if (cropType === 11) {
       if (nitrogen > 80) {
         predictedFertilizer = 'Urea';
         confidence = 95;
@@ -239,7 +231,6 @@ export const predictFertilizer = async (input: MLPredictionInput): Promise<MLPre
         confidence = 89;
       }
     } else {
-      // General crops
       if (nitrogen < 20 && phosphorus < 20 && potassium < 20) {
         predictedFertilizer = '17-17-17';
         confidence = 87;
@@ -258,12 +249,10 @@ export const predictFertilizer = async (input: MLPredictionInput): Promise<MLPre
       }
     }
 
-    // Adjust confidence based on environmental factors
     if (temperature < 15 || temperature > 40) confidence -= 5;
     if (humidity < 30 || humidity > 90) confidence -= 3;
     if (moisture < 20 || moisture > 90) confidence -= 4;
 
-    // Ensure confidence is within reasonable bounds
     confidence = Math.max(75, Math.min(98, confidence));
 
     return {
@@ -275,14 +264,14 @@ export const predictFertilizer = async (input: MLPredictionInput): Promise<MLPre
 
 export const getCropTypeOptions = () => {
   return Object.keys(CROP_TYPES).map(crop => ({
-    value: crop, // Use the actual crop type name instead of numeric code
+    value: crop,
     label: crop
   }));
 };
 
 export const getSoilTypeOptions = () => {
   return Object.keys(SOIL_TYPES).map(soil => ({
-    value: soil, // Use the actual soil type name instead of numeric code
+    value: soil,
     label: soil
   }));
 };

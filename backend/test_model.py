@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-"""
-Test script for the fertilizer recommendation model
-"""
 
 import sys
 import os
@@ -11,11 +8,9 @@ sys.path.append(os.path.dirname(__file__))
 from main import load_and_train_model, predict_fertilizer, FertilizerInput
 
 async def test_model():
-    """Test the model with sample data"""
     print("Testing Fertilizer Recommendation Model...")
     print("=" * 50)
     
-    # Test model loading and training
     print("1. Loading and training model...")
     success = load_and_train_model()
     
@@ -25,7 +20,6 @@ async def test_model():
     
     print("✅ Model loaded and trained successfully")
     
-    # Test prediction with sample data
     print("\n2. Testing prediction...")
     
     test_input = FertilizerInput(

@@ -72,7 +72,6 @@ const Recommendations = () => {
     navigate('/dashboard', { state: { activeTab: 'recommendations' } });
   };
 
-  // If no data is passed, redirect to dashboard
   if (!recommendations || !formData) {
     navigate('/dashboard');
     return null;

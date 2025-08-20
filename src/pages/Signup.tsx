@@ -45,7 +45,6 @@ const Signup = () => {
     setIsLoading(true);
 
     try {
-      // Check if product ID exists in products table
       const supabaseMod = await import("@/services/supabaseClient");
       const supabase = supabaseMod.supabase;
       const { data: productData, error: productError } = await supabase
@@ -68,7 +67,6 @@ const Signup = () => {
         email: formData.email,
         password: formData.password,
         fullName: formData.name,
-        // You can also store product_key if needed
       });
 
       if (error) {

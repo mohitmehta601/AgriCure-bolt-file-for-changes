@@ -94,7 +94,6 @@ const Dashboard = () => {
 
       setUser(currentUser);
       
-      // Load user profile
       const { data: profile, error: profileError } = await authService.getUserProfile(currentUser.id);
       if (!profileError && profile) {
         setUserProfile(profile);
@@ -115,7 +114,6 @@ const Dashboard = () => {
     const moisture = parseFloat(data.soilMoisture);
     const fieldSize = parseFloat(data.fieldSize);
 
-    // Convert to hectares for calculations
     const convertToHectares = (size: number, unit: string): number => {
       switch (unit) {
         case 'acres': return size * 0.404686;
@@ -127,7 +125,6 @@ const Dashboard = () => {
 
     const hectares = convertToHectares(fieldSize, data.sizeUnit);
 
-    // Get ML prediction
     const mlInput = {
       temperature: parseFloat(data.temperature),
       humidity: parseFloat(data.humidity),
@@ -141,7 +138,6 @@ const Dashboard = () => {
 
     const mlPrediction = await predictFertilizer(mlInput);
 
-    // Analyze soil conditions
     const phStatus = pH < 6.0 ? 'Acidic' : pH > 7.5 ? 'Alkaline' : 'Optimal';
     const moistureStatus = moisture < 40 ? 'Low' : moisture > 80 ? 'High' : 'Optimal';
     
@@ -150,11 +146,9 @@ const Dashboard = () => {
     if (phosphorus < 15) nutrientDeficiency.push('Phosphorus');
     if (potassium < 120) nutrientDeficiency.push('Potassium');
 
-    // Get crop and soil names
     const cropName = Object.keys(CROP_TYPES).find(key => CROP_TYPES[key as keyof typeof CROP_TYPES] === parseInt(data.cropType)) || 'Unknown';
     const soilName = Object.keys(SOIL_TYPES).find(key => SOIL_TYPES[key as keyof typeof SOIL_TYPES] === parseInt(data.soilType)) || 'Unknown';
 
-    // Use ML prediction as primary fertilizer
     const primaryFertilizerInfo = FERTILIZER_INFO[mlPrediction.fertilizer as keyof typeof FERTILIZER_INFO];
     
     const primaryFertilizer = {
@@ -164,7 +158,6 @@ const Dashboard = () => {
       applicationMethod: primaryFertilizerInfo ? primaryFertilizerInfo.application : 'Apply as per standard agricultural practices'
     };
 
-    // Generate secondary fertilizer based on deficiencies
     let secondaryFertilizer;
     if (nutrientDeficiency.includes('Phosphorus')) {
       secondaryFertilizer = {
@@ -189,10 +182,9 @@ const Dashboard = () => {
       };
     }
 
-    // Calculate costs in INR (Indian Rupees)
-    const primaryCost = Math.round(hectares * 4000); // ₹4,000 per hectare
-    const secondaryCost = Math.round(hectares * 2500); // ₹2,500 per hectare
-    const organicCost = Math.round(hectares * 2000); // ₹2,000 per hectare
+    const primaryCost = Math.round(hectares * 4000);
+    const secondaryCost = Math.round(hectares * 2500);
+    const organicCost = Math.round(hectares * 2000);
     const totalCost = primaryCost + secondaryCost + organicCost;
 
     return {
@@ -249,7 +241,6 @@ const Dashboard = () => {
     setIsGenerating(true);
     
     try {
-      // Convert farm data to the expected format for generateEnhancedRecommendations
       const formDataForRecommendations = {
         fieldName: data.farm.name,
         fieldSize: data.farm.size.toString(),
@@ -267,7 +258,6 @@ const Dashboard = () => {
       
       const enhancedRecommendations = await generateEnhancedRecommendations(formDataForRecommendations);
       
-      // Save recommendation to database
       if (user) {
         const recommendationData = {
           user_id: user.id,
@@ -302,7 +292,6 @@ const Dashboard = () => {
         }
       }
 
-      // Navigate to recommendations page with data
       navigate('/recommendations', {
         state: {
           recommendations: enhancedRecommendations,

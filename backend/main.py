@@ -13,7 +13,6 @@ from typing import Dict, Any
 import logging
 from soil_api import soil_data_api
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -23,16 +22,14 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify your frontend domain
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Pydantic models for input validation
 class FertilizerInput(BaseModel):
     Temperature: float
     Humidity: float
@@ -61,7 +58,6 @@ class FertilizerResponse(BaseModel):
     confidence: float
     prediction_info: Dict[str, Any]
 
-# Global variables for model and encoders
 model = None
 soil_encoder = None
 crop_encoder = None
@@ -69,18 +65,15 @@ fertilizer_encoder = None
 model_accuracy = None
 
 def load_and_train_model():
-    """Load dataset and train the model"""
     global model, soil_encoder, crop_encoder, fertilizer_encoder, model_accuracy
     
     try:
-        # Load the dataset
         dataset_path = os.path.join(os.path.dirname(__file__), "..", "ML-model-main", "f2.csv")
         logger.info(f"Loading dataset from: {dataset_path}")
         
         data = pd.read_csv(dataset_path)
         logger.info(f"Dataset loaded successfully. Shape: {data.shape}")
         
-        # Check if the required columns exist
         required_columns = ['Temparature', 'Humidity', 'Moisture', 'Soil_Type', 'Crop_Type', 
                            'Nitrogen', 'Potassium', 'Phosphorous', 'Fertilizer']
         
@@ -88,32 +81,26 @@ def load_and_train_model():
         if missing_columns:
             raise ValueError(f"Missing columns in dataset: {missing_columns}")
         
-        # Rename columns to match our API (fix typo in 'Temparature')
         data = data.rename(columns={'Temparature': 'Temperature'})
         
-        # Initialize label encoders
         soil_encoder = LabelEncoder()
         crop_encoder = LabelEncoder()
         fertilizer_encoder = LabelEncoder()
         
-        # Encode categorical variables
         data['Soil_Type_Encoded'] = soil_encoder.fit_transform(data['Soil_Type'])
         data['Crop_Type_Encoded'] = crop_encoder.fit_transform(data['Crop_Type'])
         data['Fertilizer_Encoded'] = fertilizer_encoder.fit_transform(data['Fertilizer'])
         
-        # Prepare features (X) and target (y)
         feature_columns = ['Temperature', 'Humidity', 'Moisture', 'Soil_Type_Encoded', 
                           'Crop_Type_Encoded', 'Nitrogen', 'Potassium', 'Phosphorous']
         
         X = data[feature_columns]
         y = data['Fertilizer_Encoded']
         
-        # Split the data
         X_train, X_test, y_train, y_test = train_test_split(
             X, y, test_size=0.2, random_state=42, stratify=y
         )
         
-        # Train Random Forest model
         model = RandomForestClassifier(
             n_estimators=100,
             random_state=42,
@@ -124,7 +111,6 @@ def load_and_train_model():
         
         model.fit(X_train, y_train)
         
-        # Calculate accuracy
         y_pred = model.predict(X_test)
         model_accuracy = accuracy_score(y_test, y_pred)
         
@@ -141,7 +127,6 @@ def load_and_train_model():
 
 @app.on_event("startup")
 async def startup_event():
-    """Initialize the model on startup"""
     logger.info("Starting up Fertilizer Recommendation API...")
     success = load_and_train_model()
     if not success:
@@ -149,7 +134,6 @@ async def startup_event():
 
 @app.get("/")
 async def root():
-    """Root endpoint"""
     return {
         "message": "Fertilizer Recommendation API",
         "version": "1.0.0",
@@ -160,7 +144,6 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint"""
     return {
         "status": "healthy",
         "model_loaded": model is not None,
@@ -169,14 +152,12 @@ async def health_check():
 
 @app.post("/predict", response_model=FertilizerResponse)
 async def predict_fertilizer(input_data: FertilizerInput):
-    """Predict fertilizer recommendation"""
     global model, soil_encoder, crop_encoder, fertilizer_encoder
     
     if model is None:
         raise HTTPException(status_code=500, detail="Model not loaded. Please try again later.")
     
     try:
-        # Validate input ranges
         if not (0 <= input_data.Temperature <= 50):
             raise HTTPException(status_code=400, detail="Temperature must be between 0 and 50°C")
         if not (0 <= input_data.Humidity <= 100):
@@ -190,7 +171,6 @@ async def predict_fertilizer(input_data: FertilizerInput):
         if not (0 <= input_data.Phosphorous <= 100):
             raise HTTPException(status_code=400, detail="Phosphorous must be between 0 and 100")
         
-        # Encode categorical variables
         try:
             soil_encoded = soil_encoder.transform([input_data.Soil_Type])[0]
             crop_encoded = crop_encoder.transform([input_data.Crop_Type])[0]
@@ -200,7 +180,6 @@ async def predict_fertilizer(input_data: FertilizerInput):
                 detail=f"Invalid categorical value. {str(e)}"
             )
         
-        # Prepare input features
         features = np.array([
             input_data.Temperature,
             input_data.Humidity,
@@ -212,15 +191,12 @@ async def predict_fertilizer(input_data: FertilizerInput):
             input_data.Phosphorous
         ]).reshape(1, -1)
         
-        # Make prediction
         prediction = model.predict(features)[0]
         prediction_proba = model.predict_proba(features)[0]
         
-        # Get fertilizer name and confidence
         fertilizer_name = fertilizer_encoder.inverse_transform([prediction])[0]
         confidence = float(prediction_proba[prediction])
         
-        # Get model info
         model_info = {
             "accuracy": model_accuracy,
             "n_estimators": model.n_estimators,
@@ -252,7 +228,6 @@ async def predict_fertilizer(input_data: FertilizerInput):
 
 @app.get("/model-info")
 async def get_model_info():
-    """Get information about the trained model"""
     if model is None:
         raise HTTPException(status_code=500, detail="Model not loaded")
     
@@ -277,7 +252,6 @@ async def get_model_info():
 
 @app.post("/retrain")
 async def retrain_model():
-    """Retrain the model with current dataset"""
     try:
         success = load_and_train_model()
         if success:
@@ -289,14 +263,11 @@ async def retrain_model():
 
 @app.post("/soil-data")
 async def get_soil_data(location: LocationInput):
-    """Get soil type and properties based on GPS coordinates"""
     try:
         logger.info(f"Fetching soil data for coordinates: {location.latitude}, {location.longitude}")
         
-        # Get soil data from external APIs
         soil_data = soil_data_api.get_soil_data_by_location(location.latitude, location.longitude)
         
-        # Get location information
         location_info = soil_data_api.get_location_info(location.latitude, location.longitude)
         
         response = LocationSoilResponse(
@@ -318,19 +289,15 @@ async def get_soil_data(location: LocationInput):
 
 @app.post("/predict-with-location")
 async def predict_fertilizer_with_location(request_data: dict):
-    """Get fertilizer recommendation with automatic soil type detection from location"""
     try:
-        # Extract location data
         latitude = request_data.get('latitude')
         longitude = request_data.get('longitude')
         
         if not latitude or not longitude:
             raise HTTPException(status_code=400, detail="Latitude and longitude are required")
         
-        # Get soil data
         soil_data = soil_data_api.get_soil_data_by_location(latitude, longitude)
         
-        # Create fertilizer input with detected soil type
         fertilizer_input = FertilizerInput(
             Temperature=request_data.get('Temperature', 25.0),
             Humidity=request_data.get('Humidity', 80.0),
@@ -342,10 +309,8 @@ async def predict_fertilizer_with_location(request_data: dict):
             Phosphorous=request_data.get('Phosphorous', 35.0)
         )
         
-        # Get fertilizer prediction
         prediction_result = await predict_fertilizer(fertilizer_input)
         
-        # Add soil data to response
         response = {
             **prediction_result.dict(),
             'soil_data': soil_data,

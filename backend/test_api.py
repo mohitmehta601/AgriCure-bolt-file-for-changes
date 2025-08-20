@@ -1,24 +1,18 @@
 #!/usr/bin/env python3
-"""
-Test script for the FastAPI endpoints
-"""
 
 import requests
 import json
 import time
 
 def test_api():
-    """Test the API endpoints"""
     base_url = "http://localhost:8000"
     
     print("🧪 Testing Fertilizer Recommendation API...")
     print("=" * 50)
     
-    # Wait for server to start
     print("⏳ Waiting for server to start...")
     time.sleep(2)
     
-    # Test 1: Health check
     print("\n1. Testing health check...")
     try:
         response = requests.get(f"{base_url}/health")
@@ -35,7 +29,6 @@ def test_api():
         print("❌ Could not connect to server. Make sure it's running on port 8000")
         return False
     
-    # Test 2: Root endpoint
     print("\n2. Testing root endpoint...")
     try:
         response = requests.get(f"{base_url}/")
@@ -49,7 +42,6 @@ def test_api():
     except Exception as e:
         print(f"❌ Root endpoint error: {e}")
     
-    # Test 3: Model info
     print("\n3. Testing model info...")
     try:
         response = requests.get(f"{base_url}/model-info")
@@ -66,7 +58,6 @@ def test_api():
     except Exception as e:
         print(f"❌ Model info error: {e}")
     
-    # Test 4: Prediction endpoint
     print("\n4. Testing prediction endpoint...")
     test_input = {
         "Temperature": 25.0,
@@ -100,10 +91,9 @@ def test_api():
     except Exception as e:
         print(f"❌ Prediction error: {e}")
     
-    # Test 5: Invalid input validation
     print("\n5. Testing input validation...")
     invalid_input = {
-        "Temperature": 100.0,  # Invalid: > 50
+        "Temperature": 100.0,
         "Humidity": 80.0,
         "Moisture": 30.0,
         "Soil_Type": "Loamy",

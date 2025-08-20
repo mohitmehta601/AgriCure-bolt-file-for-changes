@@ -41,7 +41,6 @@ const SoilDataForm = ({ onSubmit }) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate processing
     setTimeout(() => {
       onSubmit(formData);
       toast({

@@ -17,7 +17,7 @@ const NotFound = () => {
   }, [location.pathname]);
 
   const handleBack = () => {
-    navigate(-1); // Go back to previous page
+    navigate(-1);
   };
 
   const handleHome = () => {

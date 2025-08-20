@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-"""
-Script to retrain the fertilizer recommendation model
-"""
 
 import pandas as pd
 import numpy as np
@@ -13,9 +10,7 @@ import pickle
 import os
 
 def retrain_model():
-    """Retrain the model with current scikit-learn version"""
     try:
-        # Load the dataset
         data_path = "../Ml-model-main/f2.csv"
         if not os.path.exists(data_path):
             data_path = "Ml-model-main/f2.csv"
@@ -28,16 +23,13 @@ def retrain_model():
         print(f"Dataset shape: {df.shape}")
         print(f"Columns: {df.columns.tolist()}")
         
-        # Prepare features and target
         X = df[['Temparature', 'Humidity', 'Moisture', 'Soil_Type', 'Crop_Type', 'Nitrogen', 'Potassium', 'Phosphorous']]
         y = df['Fertilizer']
         
-        # Create label encoders for categorical variables
         soil_encoder = LabelEncoder()
         crop_encoder = LabelEncoder()
         fertilizer_encoder = LabelEncoder()
         
-        # Encode categorical variables
         X_encoded = X.copy()
         X_encoded['Soil_Type'] = soil_encoder.fit_transform(X['Soil_Type'])
         X_encoded['Crop_Type'] = crop_encoder.fit_transform(X['Crop_Type'])
@@ -47,12 +39,10 @@ def retrain_model():
         print(f"Unique crop types: {crop_encoder.classes_}")
         print(f"Unique fertilizers: {fertilizer_encoder.classes_}")
         
-        # Split the data
         X_train, X_test, y_train, y_test = train_test_split(
             X_encoded, y_encoded, test_size=0.2, random_state=42
         )
         
-        # Train Random Forest model (same parameters as original)
         model = RandomForestClassifier(
             n_estimators=100,
             random_state=42,
@@ -64,13 +54,11 @@ def retrain_model():
         print("Training Random Forest model...")
         model.fit(X_train, y_train)
         
-        # Calculate accuracy
         y_pred = model.predict(X_test)
         accuracy = accuracy_score(y_test, y_pred)
         
         print(f"Model trained successfully with accuracy: {accuracy:.4f}")
         
-        # Save the retrained model and encoders
         os.makedirs("models", exist_ok=True)
         
         with open("models/classifier.pkl", "wb") as f:
@@ -81,7 +69,6 @@ def retrain_model():
         
         print("Model and encoder saved successfully")
         
-        # Test prediction
         test_input = np.array([[25, 78, 43, 4, 1, 22, 26, 38]])
         prediction = model.predict(test_input)
         fertilizer = fertilizer_encoder.classes_[prediction[0]]

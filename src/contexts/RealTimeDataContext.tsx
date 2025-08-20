@@ -52,7 +52,6 @@ export const RealTimeDataProvider: React.FC<RealTimeDataProviderProps> = ({ chil
   useEffect(() => {
     loadData();
     
-    // Auto-refresh every 2 minutes
     const interval = setInterval(loadData, 2 * 60 * 1000);
     return () => clearInterval(interval);
   }, []);

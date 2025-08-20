@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
-"""
-Start the FastAPI server with automatic port selection
-"""
 
 import socket
 import uvicorn
 from main import app
 
 def find_free_port(start_port=8000, max_attempts=10):
-    """Find a free port starting from start_port"""
     for port in range(start_port, start_port + max_attempts):
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
@@ -19,10 +15,8 @@ def find_free_port(start_port=8000, max_attempts=10):
     return None
 
 def main():
-    """Start the server on an available port"""
     print("🚀 Starting Fertilizer Recommendation API...")
     
-    # Find a free port
     port = find_free_port()
     if port is None:
         print("❌ Could not find a free port")
