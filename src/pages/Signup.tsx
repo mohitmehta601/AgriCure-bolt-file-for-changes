@@ -12,11 +12,11 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
+    productId: "",
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
-    farmLocation: ""
   });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ const Signup = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (formData.password !== formData.confirmPassword) {
       toast({
         title: t('common.error'),
@@ -49,9 +49,9 @@ const Signup = () => {
         email: formData.email,
         password: formData.password,
         fullName: formData.name,
-        farmLocation: formData.farmLocation
+        productId: formData.productId,
       });
-      
+
       if (error) {
         throw error;
       }
@@ -113,6 +113,19 @@ const Signup = () => {
           <CardContent className="px-4 md:px-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
+                <Label htmlFor="productId" className="text-sm md:text-base">{t('auth.productId')}</Label>
+                <Input
+                  id="productId"
+                  name="productId"
+                  type="text"
+                  placeholder="Enter your product ID"
+                  value={formData.productId}
+                  onChange={handleChange}
+                  required
+                  className="mt-1"
+                />
+              </div>
+              <div>
                 <Label htmlFor="name" className="text-sm md:text-base">{t('auth.fullName')}</Label>
                 <Input
                   id="name"
@@ -138,19 +151,7 @@ const Signup = () => {
                   className="mt-1"
                 />
               </div>
-              <div>
-                <Label htmlFor="farmLocation" className="text-sm md:text-base">{t('auth.farmLocation')}</Label>
-                <Input
-                  id="farmLocation"
-                  name="farmLocation"
-                  type="text"
-                  placeholder="City, State"
-                  value={formData.farmLocation}
-                  onChange={handleChange}
-                  required
-                  className="mt-1"
-                />
-              </div>
+              
               <div>
                 <Label htmlFor="password" className="text-sm md:text-base">{t('auth.password')}</Label>
                 <Input

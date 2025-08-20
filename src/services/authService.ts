@@ -4,6 +4,7 @@ export interface SignUpData {
   email: string;
   password: string;
   fullName: string;
+  productId: string;
   farmLocation?: string;
 }
 
@@ -16,6 +17,18 @@ export const authService = {
   // Sign up new user
   async signUp(data: SignUpData) {
     try {
+      // First, validate the product ID
+      const { data: productData, error: productError } = await supabase
+        .from('products')
+        .select('id')
+        .eq('id', data.productId)
+        .eq('is_active', true)
+        .single();
+
+      if (productError || !productData) {
+        throw new Error('Invalid Product ID. Please enter a valid Product ID.');
+      }
+
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,

@@ -22,6 +22,13 @@ export interface UserProfile {
   updated_at: string;
 }
 
+export interface Product {
+  id: string;
+  name: string;
+  is_active: boolean;
+  created_at: string;
+}
+
 export interface FertilizerRecommendation {
   id: string;
   user_id: string;
