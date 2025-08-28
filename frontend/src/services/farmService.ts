@@ -1,5 +1,30 @@
 import { supabase, Farm } from './supabaseClient';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+export type SoilDataResponse = {
+  location: { latitude: number; longitude: number; timestamp: string };
+  soil_type: "Loamy" | "Sandy" | "Clayey" | "Silty" | "Red" | "Black" | "Laterite" | "Peaty" | "Saline" | "Alkaline";
+  soil_properties: Record<string, number>;
+  confidence: number;
+  sources: string[];
+  success: boolean;
+  location_info?: Record<string, any>;
+};
+
+export async function fetchSoilType(lat: number, lon: number): Promise<SoilDataResponse> {
+  const res = await fetch(`${API_BASE_URL}/soil-data`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ latitude: lat, longitude: lon }),
+  });
+  if (!res.ok) {
+    const t = await res.text();
+    throw new Error(`Soil API failed: ${res.status} ${t}`);
+  }
+  return res.json();
+}
+
 export interface CreateFarmData {
   user_id: string;
   name: string;
@@ -136,4 +161,4 @@ export const farmService = {
   }
 };
 
-export type { Farm, CreateFarmData, UpdateFarmData };
+export type { Farm };
