@@ -6,13 +6,14 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { mlApiService, FertilizerPredictionInput } from "@/services/mlApiService";
-import { Sparkles, Leaf, Zap, Plus, Brain } from "lucide-react";
+import { Sparkles, Leaf, Zap, Plus, Brain, MapPin, Loader2 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useRealTimeData } from "@/contexts/RealTimeDataContext";
 import { farmService, Farm } from "@/services/farmService";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { getCropTypeOptions, getSoilTypeOptions } from "@/services/fertilizerMLService";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { getCropTypeOptions } from "@/services/fertilizerMLService";
+import { LocationSoilService, type SoilData, type LocationData } from "@/services/locationSoilService";
 
 interface FormData {
   selectedFarmId: string;
@@ -53,9 +54,12 @@ const EnhancedFertilizerForm = ({ onSubmit, user }: EnhancedFertilizerFormProps)
     unit: 'hectares', 
     cropType: '', 
     soilType: '', 
-    location: '' 
+    location: '',
+    coordinates: null as LocationData | null,
+    soilData: null as SoilData | null
   });
   const [saving, setSaving] = useState(false);
+  const [fetchingLocation, setFetchingLocation] = useState(false);
   const { toast } = useToast();
   const { t } = useLanguage();
   const { realTimeData, isConnected } = useRealTimeData();
@@ -145,14 +149,43 @@ const EnhancedFertilizerForm = ({ onSubmit, user }: EnhancedFertilizerFormProps)
     }
   };
 
+  const handleGetLocation = async () => {
+    setFetchingLocation(true);
+    try {
+      const { location, soilData, locationString } = await LocationSoilService.getLocationAndSoilData();
+      
+      setNewFarm(prev => ({
+        ...prev,
+        coordinates: location,
+        location: locationString,
+        soilType: soilData.soil_type,
+        soilData: soilData
+      }));
+
+      toast({
+        title: t('common.success'),
+        description: `Soil type detected: ${soilData.soil_type} (${LocationSoilService.getConfidenceDescription(soilData.confidence)})`,
+      });
+    } catch (error) {
+      console.error('Error getting location:', error);
+      toast({
+        title: t('common.error'),
+        description: 'Failed to get location. Please enter manually.',
+        variant: "destructive"
+      });
+    } finally {
+      setFetchingLocation(false);
+    }
+  };
+
   const handleAddFarm = async () => {
     if (!user?.id) return;
     
     const sizeNum = parseFloat(newFarm.size);
-    if (!newFarm.name || isNaN(sizeNum) || !newFarm.cropType || !newFarm.soilType) {
+    if (!newFarm.name || isNaN(sizeNum) || !newFarm.cropType || !newFarm.soilType || !newFarm.soilData) {
       toast({
         title: t('common.error'),
-        description: 'Please fill in all required fields',
+        description: 'Please fill in all required fields and detect your location to get soil type',
         variant: "destructive"
       });
       return;
@@ -180,7 +213,7 @@ const EnhancedFertilizerForm = ({ onSubmit, user }: EnhancedFertilizerFormProps)
       
       await loadFarms();
       setIsAddFarmOpen(false);
-      setNewFarm({ name: '', size: '', unit: 'hectares', cropType: '', soilType: '', location: '' });
+      setNewFarm({ name: '', size: '', unit: 'hectares', cropType: '', soilType: '', location: '', coordinates: null, soilData: null });
       
       if (data) {
         handleFarmSelect(data.id);
@@ -262,7 +295,6 @@ const EnhancedFertilizerForm = ({ onSubmit, user }: EnhancedFertilizerFormProps)
   };
 
   const cropOptions = getCropTypeOptions();
-  const soilOptions = getSoilTypeOptions();
 
   return (
     <>
@@ -491,7 +523,7 @@ const EnhancedFertilizerForm = ({ onSubmit, user }: EnhancedFertilizerFormProps)
                 ) : (
                   <div className="flex items-center space-x-2">
                     <Brain className="h-4 w-4" />
-                    <span>Get AI Recommendations</span>
+                    <span>Get ML Recommendations</span>
                   </div>
                 )}
               </Button>
@@ -528,6 +560,9 @@ const EnhancedFertilizerForm = ({ onSubmit, user }: EnhancedFertilizerFormProps)
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Add New Farm</DialogTitle>
+            <DialogDescription>
+              Add a new farm with automatic soil type detection based on your location
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
@@ -580,43 +615,92 @@ const EnhancedFertilizerForm = ({ onSubmit, user }: EnhancedFertilizerFormProps)
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label className="text-sm">{t('form.soilType')} *</Label>
-                <Select value={newFarm.soilType} onValueChange={(val) => setNewFarm(v => ({ ...v, soilType: val }))}>
-                  <SelectTrigger>
-                    <SelectValue placeholder={t('form.soilType')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {soilOptions.map(opt => (
-                      <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Label className="text-sm">Soil Type (Auto-detected)</Label>
+                <div className="flex items-center space-x-2">
+                  {newFarm.soilData ? (
+                    <div className="flex-1 p-2 border rounded-md bg-green-50 border-green-200">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-lg">{LocationSoilService.getSoilTypeEmoji(newFarm.soilType)}</span>
+                        <div>
+                          <div className="font-medium text-green-800">{newFarm.soilType}</div>
+                          <div className="text-xs text-green-600">
+                            Confidence: {LocationSoilService.getConfidenceDescription(newFarm.soilData.confidence)}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex-1 p-2 border rounded-md bg-gray-50 border-gray-200">
+                      <div className="text-gray-500 text-sm">
+                        Click "Get Location" to auto-detect soil type
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm">Location (Optional)</Label>
-              <Input 
-                value={newFarm.location} 
-                onChange={(e) => setNewFarm(v => ({ ...v, location: e.target.value }))} 
-                placeholder="e.g., Village, District, State" 
-              />
+              <Label className="text-sm">Location & Soil Detection</Label>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleGetLocation}
+                disabled={fetchingLocation || saving}
+                className="w-full flex items-center justify-center space-x-2 h-10"
+              >
+                {fetchingLocation ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <MapPin className="h-4 w-4" />
+                )}
+                <span>
+                  {fetchingLocation ? 'Detecting Location...' : 'Get My Location & Soil Type'}
+                </span>
+              </Button>
+              
+              {newFarm.location && (
+                <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
+                  <div className="flex items-start space-x-2">
+                    <MapPin className="h-4 w-4 text-blue-600 mt-0.5" />
+                    <div className="flex-1">
+                      <div className="font-medium text-blue-800 text-sm">{newFarm.location}</div>
+                      {newFarm.coordinates && (
+                        <div className="text-xs text-blue-600 mt-1">
+                          {newFarm.coordinates.latitude.toFixed(6)}, {newFarm.coordinates.longitude.toFixed(6)}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
-            <div className="flex justify-end gap-2 pt-4">
-              <Button variant="secondary" onClick={() => setIsAddFarmOpen(false)} disabled={saving}>
-                {t('common.cancel')}
-              </Button>
-              <Button onClick={handleAddFarm} disabled={saving} className="bg-grass-600 hover:bg-grass-700">
-                {saving ? (
-                  <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    {t('profile.saving')}
-                  </div>
-                ) : (
-                  'Add Farm'
-                )}
-              </Button>
+            <div className="space-y-3">
+              {(!newFarm.name || !newFarm.size || !newFarm.cropType || !newFarm.soilData) && (
+                <div className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-md p-2">
+                  ⚠️ Please fill in all required fields and detect your location to enable saving
+                </div>
+              )}
+              <div className="flex justify-end gap-2">
+                <Button variant="secondary" onClick={() => setIsAddFarmOpen(false)} disabled={saving}>
+                  {t('common.cancel')}
+                </Button>
+                <Button 
+                  onClick={handleAddFarm} 
+                  disabled={saving || !newFarm.name || !newFarm.size || !newFarm.cropType || !newFarm.soilData} 
+                  className="bg-grass-600 hover:bg-grass-700"
+                >
+                  {saving ? (
+                    <div className="flex items-center">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      {t('profile.saving')}
+                    </div>
+                  ) : (
+                    t('dashboard.saveFarm') || 'Save Farm'
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
         </DialogContent>
