@@ -9,13 +9,18 @@ from sklearn.metrics import accuracy_score
 import pickle
 import os
 
+# Base directories for models, data, templates, and static files
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_DIR = os.path.join(BASE_DIR, "models")
+ML_DIR = os.path.join(BASE_DIR, "ml")
+TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
+STATIC_DIR = os.path.join(BASE_DIR, "static")
+
 def retrain_model():
     try:
-        data_path = "../Ml-model-main/f2.csv"
+        data_path = os.path.join(ML_DIR, "f2.csv")
         if not os.path.exists(data_path):
-            data_path = "Ml-model-main/f2.csv"
-            if not os.path.exists(data_path):
-                raise FileNotFoundError("Dataset f2.csv not found")
+            raise FileNotFoundError("Dataset f2.csv not found")
         
         print(f"Loading dataset from {data_path}")
         df = pd.read_csv(data_path)
@@ -59,12 +64,12 @@ def retrain_model():
         
         print(f"Model trained successfully with accuracy: {accuracy:.4f}")
         
-        os.makedirs("models", exist_ok=True)
+        os.makedirs(MODEL_DIR, exist_ok=True)
         
-        with open("models/classifier.pkl", "wb") as f:
+        with open(os.path.join(MODEL_DIR, "classifier.pkl"), "wb") as f:
             pickle.dump(model, f)
         
-        with open("models/fertilizer.pkl", "wb") as f:
+        with open(os.path.join(MODEL_DIR, "fertilizer.pkl"), "wb") as f:
             pickle.dump(fertilizer_encoder, f)
         
         print("Model and encoder saved successfully")

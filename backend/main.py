@@ -13,6 +13,13 @@ from typing import Dict, Any
 import logging
 from soil_api import soil_data_api
 
+# Base directories for models, data, templates, and static files
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_DIR = os.path.join(BASE_DIR, "models")
+ML_DIR = os.path.join(BASE_DIR, "ml")
+TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
+STATIC_DIR = os.path.join(BASE_DIR, "static")
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -68,7 +75,7 @@ def load_and_train_model():
     global model, soil_encoder, crop_encoder, fertilizer_encoder, model_accuracy
     
     try:
-        dataset_path = os.path.join(os.path.dirname(__file__), "..", "ML-model-main", "f2.csv")
+        dataset_path = os.path.join(ML_DIR, "f2.csv")
         logger.info(f"Loading dataset from: {dataset_path}")
         
         data = pd.read_csv(dataset_path)

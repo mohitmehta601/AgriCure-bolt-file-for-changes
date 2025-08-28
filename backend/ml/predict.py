@@ -1,15 +1,20 @@
 import sys
 import pickle
 import numpy as np
+import os
 import warnings
 warnings.filterwarnings('ignore')
 
+# Base directories for models, data, templates, and static files
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MODEL_DIR = os.path.join(BASE_DIR, "models")
+
 def load_models():
     try:
-        with open('classifier.pkl', 'rb') as f:
+        with open(os.path.join(MODEL_DIR, 'classifier.pkl'), 'rb') as f:
             model = pickle.load(f)
         
-        with open('fertilizer.pkl', 'rb') as f:
+        with open(os.path.join(MODEL_DIR, 'fertilizer.pkl'), 'rb') as f:
             fertilizer_encoder = pickle.load(f)
         
         return model, fertilizer_encoder
