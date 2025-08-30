@@ -563,7 +563,7 @@ const EnhancedFertilizerForm = ({ onSubmit, user }: EnhancedFertilizerFormProps)
           <DialogHeader>
             <DialogTitle>Add New Farm</DialogTitle>
             <DialogDescription>
-              Add a new farm with automatic soil type detection based on your location
+              Add a new farm - all fields are required including location detection and sowing date
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">

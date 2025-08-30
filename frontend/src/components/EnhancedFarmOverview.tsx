@@ -599,7 +599,7 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
               {editingFarm ? t('dashboard.editFarm') : t('dashboard.addFarm')}
             </DialogTitle>
             <DialogDescription>
-              {editingFarm ? 'Update your farm details and location' : 'Add a new farm with automatic soil type detection based on your location'}
+              {editingFarm ? 'Update your farm details and location' : 'Add a new farm - all fields are required including location detection and sowing date'}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
