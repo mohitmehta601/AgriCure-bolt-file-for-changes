@@ -55,7 +55,8 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
     soilType: '', 
     location: '',
     coordinates: null as LocationData | null,
-    soilData: null as SoilData | null
+    soilData: null as SoilData | null,
+    sowingDate: ''
   });
   const [saving, setSaving] = useState(false);
   const [fetchingLocation, setFetchingLocation] = useState(false);
@@ -152,7 +153,8 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
           unit: newFarm.unit as 'hectares' | 'acres' | 'bigha',
           crop_type: newFarm.cropType,
           soil_type: newFarm.soilType,
-          location: newFarm.location || undefined
+          location: newFarm.location || undefined,
+          sowing_date: newFarm.sowingDate || undefined
         };
         
         const { data, error } = await farmService.updateFarm(editingFarm.id, updateData);
@@ -171,7 +173,8 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
           unit: newFarm.unit as 'hectares' | 'acres' | 'bigha',
           crop_type: newFarm.cropType,
           soil_type: newFarm.soilType,
-          location: newFarm.location || undefined
+          location: newFarm.location || undefined,
+          sowing_date: newFarm.sowingDate || undefined
         };
         
         const { data, error } = await farmService.createFarm(farmData);
@@ -231,7 +234,8 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
       soilType: farm.soil_type,
       location: farm.location || '',
       coordinates: null,
-      soilData: null
+      soilData: null,
+      sowingDate: farm.sowing_date || ''
     });
     setIsAddOpen(true);
   };
@@ -247,7 +251,8 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
       soilType: '', 
       location: '',
       coordinates: null,
-      soilData: null
+      soilData: null,
+      sowingDate: ''
     });
   };
 
@@ -566,6 +571,11 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
                       📍 {farm.location}
                     </p>
                   )}
+                  {farm.sowing_date && (
+                    <p className="text-xs text-gray-500 mb-2">
+                      🌱 Sown: {new Date(farm.sowing_date).toLocaleDateString()}
+                    </p>
+                  )}
                   <p className="text-xs text-gray-400">
                     Added: {new Date(farm.created_at).toLocaleDateString()}
                   </p>
@@ -701,6 +711,20 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
                   </div>
                 )}
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-sm">Sowing Date (Optional)</Label>
+              <Input
+                type="date"
+                value={newFarm.sowingDate}
+                onChange={(e) => setNewFarm(v => ({ ...v, sowingDate: e.target.value }))}
+                className="w-full"
+                max={new Date().toISOString().split('T')[0]} // Prevent future dates
+              />
+              <p className="text-xs text-gray-500">
+                Select the date when you sowed/planted the crop in this field
+              </p>
             </div>
 
             <div className="flex justify-end gap-2 pt-4">
