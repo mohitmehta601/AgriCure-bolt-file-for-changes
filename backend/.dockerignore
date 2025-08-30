@@ -1,9 +1,0 @@
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.ipynb_checkpoints/
-.vscode/
-.venv/
-node_modules/
-docs/
