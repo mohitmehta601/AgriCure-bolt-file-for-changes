@@ -55,8 +55,7 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
     soilType: '', 
     location: '',
     coordinates: null as LocationData | null,
-    soilData: null as SoilData | null,
-    sowingDate: ''
+    soilData: null as SoilData | null
   });
   const [saving, setSaving] = useState(false);
   const [fetchingLocation, setFetchingLocation] = useState(false);
@@ -135,10 +134,10 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
     if (!user?.id) return;
     
     const sizeNum = parseFloat(newFarm.size);
-    if (!newFarm.name || isNaN(sizeNum) || !newFarm.cropType || !newFarm.soilType || !newFarm.location || !newFarm.soilData || !newFarm.sowingDate) {
+    if (!newFarm.name || isNaN(sizeNum) || !newFarm.cropType || !newFarm.soilType) {
       toast({
         title: t('common.error'),
-        description: 'Please fill in all required fields including location detection and sowing date',
+        description: 'Please fill in all required fields',
         variant: "destructive"
       });
       return;
@@ -153,8 +152,7 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
           unit: newFarm.unit as 'hectares' | 'acres' | 'bigha',
           crop_type: newFarm.cropType,
           soil_type: newFarm.soilType,
-          location: newFarm.location || undefined,
-          sowing_date: newFarm.sowingDate || undefined
+          location: newFarm.location || undefined
         };
         
         const { data, error } = await farmService.updateFarm(editingFarm.id, updateData);
@@ -173,11 +171,7 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
           unit: newFarm.unit as 'hectares' | 'acres' | 'bigha',
           crop_type: newFarm.cropType,
           soil_type: newFarm.soilType,
-          location: newFarm.location,
-          latitude: newFarm.coordinates?.latitude,
-          longitude: newFarm.coordinates?.longitude,
-          soil_data: newFarm.soilData,
-          sowing_date: newFarm.sowingDate
+          location: newFarm.location || undefined
         };
         
         const { data, error } = await farmService.createFarm(farmData);
@@ -237,8 +231,7 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
       soilType: farm.soil_type,
       location: farm.location || '',
       coordinates: null,
-      soilData: null,
-      sowingDate: farm.sowing_date || ''
+      soilData: null
     });
     setIsAddOpen(true);
   };
@@ -254,8 +247,7 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
       soilType: '', 
       location: '',
       coordinates: null,
-      soilData: null,
-      sowingDate: ''
+      soilData: null
     });
   };
 
@@ -574,11 +566,6 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
                       📍 {farm.location}
                     </p>
                   )}
-                  {farm.sowing_date && (
-                    <p className="text-xs text-gray-500 mb-2">
-                      🌱 Sown: {new Date(farm.sowing_date).toLocaleDateString()}
-                    </p>
-                  )}
                   <p className="text-xs text-gray-400">
                     Added: {new Date(farm.created_at).toLocaleDateString()}
                   </p>
@@ -599,7 +586,7 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
               {editingFarm ? t('dashboard.editFarm') : t('dashboard.addFarm')}
             </DialogTitle>
             <DialogDescription>
-              {editingFarm ? 'Update your farm details and location' : 'Add a new farm - all fields are required including location detection and sowing date'}
+              {editingFarm ? 'Update your farm details and location' : 'Add a new farm with automatic soil type detection based on your location'}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -609,7 +596,6 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
                 value={newFarm.name} 
                 onChange={(e) => setNewFarm(v => ({ ...v, name: e.target.value }))} 
                 placeholder="e.g., North Field" 
-                required
               />
             </div>
             
@@ -619,11 +605,9 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
                 <Input 
                   type="number" 
                   step="0.1"
-                  min="0.1"
                   value={newFarm.size} 
                   onChange={(e) => setNewFarm(v => ({ ...v, size: e.target.value }))} 
                   placeholder="0.0" 
-                  required
                 />
               </div>
               <div className="space-y-2">
@@ -646,7 +630,7 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
                 <Label className="text-sm">{t('form.cropType')} *</Label>
                 <Select value={newFarm.cropType} onValueChange={(val) => setNewFarm(v => ({ ...v, cropType: val }))}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select crop type *" />
+                    <SelectValue placeholder={t('form.cropType')} />
                   </SelectTrigger>
                   <SelectContent className="max-h-60">
                     {getCropTypeOptions().map(opt => (
@@ -656,7 +640,7 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label className="text-sm">Soil Type (Auto-detected) *</Label>
+                <Label className="text-sm">Soil Type (Auto-detected)</Label>
                 <div className="flex items-center space-x-2">
                   {newFarm.soilData ? (
                     <div className="flex-1 p-2 border rounded-md bg-green-50 border-green-200">
@@ -673,7 +657,7 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
                   ) : (
                     <div className="flex-1 p-2 border rounded-md bg-gray-50 border-gray-200">
                       <div className="text-gray-500 text-sm">
-                        Required: Click "Get Location" to auto-detect soil type
+                        Click "Get Location" to auto-detect soil type
                       </div>
                     </div>
                   )}
@@ -682,14 +666,14 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
             </div>
 
             <div className="space-y-2">
-              <Label className="text-sm">Location & Soil Detection *</Label>
+              <Label className="text-sm">Location & Soil Detection</Label>
               <div className="space-y-3">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={handleGetLocation}
                   disabled={fetchingLocation || saving}
-                  className={`w-full flex items-center justify-center space-x-2 h-10 ${!newFarm.soilData ? 'border-red-300 bg-red-50' : 'border-green-300 bg-green-50'}`}
+                  className="w-full flex items-center justify-center space-x-2 h-10"
                 >
                   {fetchingLocation ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -717,21 +701,6 @@ const EnhancedFarmOverview = ({ user }: EnhancedFarmOverviewProps) => {
                   </div>
                 )}
               </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label className="text-sm">Sowing Date *</Label>
-              <Input
-                type="date"
-                value={newFarm.sowingDate}
-                onChange={(e) => setNewFarm(v => ({ ...v, sowingDate: e.target.value }))}
-                className="w-full"
-                max={new Date().toISOString().split('T')[0]} // Prevent future dates
-                required
-              />
-              <p className="text-xs text-gray-500">
-                Required: Select the date when you sowed/planted the crop in this field
-              </p>
             </div>
 
             <div className="flex justify-end gap-2 pt-4">
